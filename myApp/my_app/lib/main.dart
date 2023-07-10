@@ -234,7 +234,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
                   return AlertDialog(
                     title: Text(
                       "Delete ingredient?",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.black),
                     ),
                     content: ElevatedButton(
                       child: Text("DELETE"),
