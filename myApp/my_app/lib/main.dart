@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 
-
 void main() {
   runApp(
     ChangeNotifierProvider(
@@ -46,8 +45,10 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  //ignore     V
   var favorites = <WordPair>[];
   var Ilist = <String>[];
+  //end-ignore ^
   var inventoryList = <Ingredient>[];
 
   void toggleFavorite() {
@@ -64,6 +65,19 @@ class MyAppState extends ChangeNotifier {
     await file.writeAsString('$name,${date.toString()}\n',
         mode: FileMode.append);
     notifyListeners();
+  }
+
+  void deleteFromFile(int index) async {
+    final file = File("lib/Ingredients.txt");
+    List<String> lines = await file.readAsLines();
+
+    if (index >= 0 && index < lines.length) {
+      lines.removeAt(index);
+      await file.writeAsString(lines.join('\n'));
+      print('Line deleted successfully.');
+    } else {
+      print('Invalid line index.');
+    }
   }
 
   void readFile() async {
@@ -212,24 +226,48 @@ class _GeneratorPageState extends State<GeneratorPage> {
         String expirationText =
             isExpired ? 'Expired' : 'Expires on ${expirationDate.toString()}';
 
-        Widget ingredientTile = Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListTile(
-            visualDensity: VisualDensity(horizontal: .5),
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                color: getColor(expireDays),
-                width: 2,
+        Widget ingredientTile = GestureDetector(
+          onTap: () async {
+            await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text(
+                      "Delete ingredient?",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    content: ElevatedButton(
+                      child: Text("DELETE"),
+                      onPressed: () async {
+                        String delete = ingredient.name;
+                        appState.deleteFromFile(appState.inventoryList
+                            .indexWhere(
+                                (ingredient) => ingredient.name == delete));
+                        Navigator.pop(context);
+                      },
+                    ),
+                  );
+                });
+            print("tap");
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              visualDensity: VisualDensity(horizontal: .5),
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: getColor(expireDays),
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(10),
               ),
-              borderRadius: BorderRadius.circular(10),
+              textColor: Color.fromRGBO(255, 255, 255, 1),
+              leading: Icon(Icons.favorite),
+              title: Text(ingredient.name),
+              subtitle: Text(expirationText),
             ),
-            textColor: Color.fromRGBO(255, 255, 255, 1),
-            leading: Icon(Icons.favorite),
-            title: Text(ingredient.name),
-            subtitle: Text(expirationText),
           ),
         );
-
         ingredientListTiles.add(ingredientTile);
       }
 
@@ -305,7 +343,6 @@ class _IngredientInputBoxState extends State<IngredientInputBox> {
 
                       Navigator.of(context).pop();
                     },
-                    // onEditingComplete: Navigator.of(context).pop,
                   ),
                   actions: <Widget>[
                     TextButton(
