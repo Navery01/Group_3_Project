@@ -4,6 +4,8 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
+import 'recipes.dart';
+import 'dart:convert';
 
 void main() {
   runApp(
@@ -50,6 +52,8 @@ class MyAppState extends ChangeNotifier {
   var Ilist = <String>[];
   //end-ignore ^
   var inventoryList = <Ingredient>[];
+  Map<String, dynamic> recipeLibrary =
+      {}; //access with AppState.recipeLibrary["id"].attribute
 
   void toggleFavorite() {
     if (favorites.contains(current)) {
@@ -100,6 +104,21 @@ class MyAppState extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void readRecipes() async {
+    //fills a map (recipeLibrary) with recipes from the JSON database
+    var file = File("jsonfile/db-recipes.json");
+    if (await file.exists()) {
+      String parseJSON = await file.readAsString();
+      Map<String, dynamic> jsonMap = jsonDecode(parseJSON);
+
+      jsonMap.keys.forEach((key) {
+        recipes recipe = recipes.fromJSON(jsonMap[key]);
+        recipeLibrary[key] = recipe;
+      });
+      print(recipeLibrary);
+    }
+  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -118,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = GeneratorPage();
         break;
       case 1:
-        page = Placeholder();
+        page = RecipesPage();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -361,11 +380,12 @@ class _IngredientInputBoxState extends State<IngredientInputBox> {
   }
 } //Ingredientinput box
 
-class FavoritesPage extends StatelessWidget {
+class RecipesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     appState.readFile();
+    appState.readRecipes();
     if (appState.Ilist.isEmpty) {
       return Center(
         child: Text(
