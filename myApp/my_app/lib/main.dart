@@ -51,18 +51,10 @@ class MyAppState extends ChangeNotifier {
   var favorites = <WordPair>[];
   var Ilist = <String>[];
   //end-ignore ^
-  var inventoryList = <Ingredient>[];
+
+  List inventoryList = <Ingredient>[];
   Map<String, dynamic> recipeLibrary =
       {}; //access with AppState.recipeLibrary["id"].attribute
-
-  void toggleFavorite() {
-    if (favorites.contains(current)) {
-      favorites.remove(current);
-    } else {
-      favorites.add(current);
-    }
-    notifyListeners();
-  }
 
   Future<void> writeToFile(String name, DateTime date) async {
     final file = File("lib/Ingredients.txt");
@@ -86,7 +78,7 @@ class MyAppState extends ChangeNotifier {
 
   void readFile() async {
     try {
-      var file = File("lib/ingredients.txt");
+      final file = File("lib/ingredients.txt");
       if (await file.exists()) {
         var contents = await file.readAsLines();
         if (contents.isNotEmpty) {
@@ -107,16 +99,20 @@ class MyAppState extends ChangeNotifier {
 
   void readRecipes() async {
     //fills a map (recipeLibrary) with recipes from the JSON database
-    var file = File("jsonfile/db-recipes.json");
-    if (await file.exists()) {
-      String parseJSON = await file.readAsString();
-      Map<String, dynamic> jsonMap = jsonDecode(parseJSON);
+    try {
+      var file = File("jsonfile/db-recipes.json");
+      if (await file.exists()) {
+        String parseJSON = await file.readAsString();
+        Map<String, dynamic> jsonMap = jsonDecode(parseJSON);
 
-      jsonMap.keys.forEach((key) {
-        recipes recipe = recipes.fromJSON(jsonMap[key]);
-        recipeLibrary[key] = recipe;
-      });
-      print(recipeLibrary);
+        jsonMap.keys.forEach((key) {
+          recipes recipe = recipes.fromJSON(jsonMap[key]);
+          recipeLibrary[key] = recipe;
+          print(recipeLibrary[key].name);
+        });
+      }
+    } catch (e) {
+      print("error reading JSON file");
     }
   }
 }
