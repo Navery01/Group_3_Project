@@ -108,7 +108,6 @@ class MyAppState extends ChangeNotifier {
         jsonMap.keys.forEach((key) {
           recipes recipe = recipes.fromJSON(jsonMap[key]);
           recipeLibrary[key] = recipe;
-          print(recipeLibrary[key].name);
         });
       }
     } catch (e) {
@@ -153,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   NavigationRailDestination(
                     icon: Icon(Icons.favorite),
-                    label: Text('Ingredients List'),
+                    label: Text('Recipe List'),
                   ),
                 ],
                 selectedIndex: selectedIndex,
@@ -376,50 +375,55 @@ class _IngredientInputBoxState extends State<IngredientInputBox> {
   }
 } //Ingredientinput box
 
-class RecipesPage extends StatelessWidget {
+class RecipesPage extends StatefulWidget {
+  @override
+  State<RecipesPage> createState() => _RecipesPageState();
+}
+
+class _RecipesPageState extends State<RecipesPage> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     appState.readFile();
     appState.readRecipes();
-    if (appState.Ilist.isEmpty) {
+    if (appState.recipeLibrary.isEmpty) {
       return Center(
         child: Text(
-          "You have no ingredients",
-          style: TextStyle(
-            color: Color.fromRGBO(255, 255, 255, 1),
+          "You have no recipes",
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+    } else {
+      List<Widget> recipeListTiles = [];
+
+      appState.recipeLibrary.forEach((key, value) {
+        var recipeTiles = Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            visualDensity: VisualDensity(horizontal: .5),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            textColor: Color.fromRGBO(255, 255, 255, 1),
+            leading: Icon(Icons.favorite),
+            title: Text(value.name),
+          ),
+        );
+        recipeListTiles.add(recipeTiles);
+      });
+
+      return Container(
+        height: 600,
+        child: SingleChildScrollView(
+          child: Column(
+            children: recipeListTiles,
           ),
         ),
       );
     }
-
-    return ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text(
-            'You have '
-            '${appState.Ilist.length} ingredients:',
-            style: TextStyle(color: Color.fromRGBO(255, 255, 255, 1)),
-          ),
-        ),
-        for (var ingredient in appState.Ilist)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListTile(
-              visualDensity: VisualDensity(horizontal: .5),
-              shape: RoundedRectangleBorder(
-                side:
-                    BorderSide(color: Color.fromRGBO(0, 255, 0, .5), width: 2),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              textColor: Color.fromRGBO(255, 255, 255, 1),
-              leading: Icon(Icons.favorite),
-              title: Text(ingredient),
-            ),
-          ),
-      ],
-    );
   }
 }
 
