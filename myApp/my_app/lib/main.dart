@@ -381,11 +381,14 @@ class RecipesPage extends StatefulWidget {
 }
 
 class _RecipesPageState extends State<RecipesPage> {
+  String? selectedOption; // Update to use nullable String
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     appState.readFile();
     appState.readRecipes();
+
     if (appState.recipeLibrary.isEmpty) {
       return Center(
         child: Text(
@@ -415,13 +418,46 @@ class _RecipesPageState extends State<RecipesPage> {
         recipeListTiles.add(recipeTiles);
       });
 
-      return Container(
-        height: 600,
-        child: SingleChildScrollView(
-          child: Column(
-            children: recipeListTiles,
+      List<DropdownMenuItem<String>> dropdownItems = [
+        DropdownMenuItem(
+            child: Text(
+              "Lactose Intolerant",
+              style: TextStyle(color: Colors.white),
+            ),
+            value: "LI"),
+        DropdownMenuItem(
+            child: Text("Gluten Free", style: TextStyle(color: Colors.white)),
+            value: "GF"),
+        DropdownMenuItem(
+            child: Text("Vegetarian", style: TextStyle(color: Colors.white)),
+            value: "v"),
+        DropdownMenuItem(
+            child: Text("Vegan", style: TextStyle(color: Colors.white)),
+            value: "V"),
+      ];
+
+      return Column(
+        children: [
+          Center(
+            child: DropdownButton<String>(
+              dropdownColor: Colors.black,
+              items: dropdownItems,
+              onChanged: (value) {
+                setState(() {
+                  selectedOption = value;
+                });
+              },
+              value: selectedOption,
+            ),
           ),
-        ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: recipeListTiles,
+              ),
+            ),
+          ),
+        ],
       );
     }
   }
