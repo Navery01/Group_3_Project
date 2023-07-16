@@ -42,16 +42,6 @@ class MyApp extends StatelessWidget {
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
 
-  void getNext() {
-    current = WordPair.random();
-    notifyListeners();
-  }
-
-  //ignore     V
-  var favorites = <WordPair>[];
-  var Ilist = <String>[];
-  //end-ignore ^
-
   List inventoryList = <Ingredient>[];
   Map<String, dynamic> recipeLibrary =
       {}; //access with AppState.recipeLibrary["id"].attribute
@@ -198,21 +188,6 @@ class _GeneratorPageState extends State<GeneratorPage> {
             child: IngredientShowcase(appState),
             height: 600,
           ),
-
-          // ElevatedButton.icon(
-          //   onPressed: () {
-          //     // appState.toggleFavorite();
-          //   },
-          //   icon: Icon(icon),
-          //   label: Text('Like'),
-          // ),
-          // SizedBox(width: 10),
-          // ElevatedButton(
-          //   onPressed: () {
-          //     appState.getNext();
-          //   },
-          //   child: Text('Next'),
-          // ),
         ],
       ),
     );
@@ -381,7 +356,7 @@ class RecipesPage extends StatefulWidget {
 }
 
 class _RecipesPageState extends State<RecipesPage> {
-  String? selectedOption; // Update to use nullable String
+  String? selectedOption;
 
   @override
   Widget build(BuildContext context) {
@@ -400,6 +375,7 @@ class _RecipesPageState extends State<RecipesPage> {
       List<Widget> recipeListTiles = [];
 
       appState.recipeLibrary.forEach((key, value) {
+        String ing = value.ingredients.join(", ");
         var recipeTiles = Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListTile(
@@ -413,27 +389,30 @@ class _RecipesPageState extends State<RecipesPage> {
             textColor: Color.fromRGBO(255, 255, 255, 1),
             leading: Icon(Icons.favorite),
             title: Text(value.name),
+            subtitle: Text(ing),
           ),
         );
-        recipeListTiles.add(recipeTiles);
+        if (checkIngredints(value.ingredients, appState)) {
+          recipeListTiles.add(recipeTiles);
+        }
       });
 
       List<DropdownMenuItem<String>> dropdownItems = [
         DropdownMenuItem(
+            value: "LI",
             child: Text(
               "Lactose Intolerant",
               style: TextStyle(color: Colors.white),
-            ),
-            value: "LI"),
+            )),
         DropdownMenuItem(
-            child: Text("Gluten Free", style: TextStyle(color: Colors.white)),
-            value: "GF"),
+            value: "GF",
+            child: Text("Gluten Free", style: TextStyle(color: Colors.white))),
         DropdownMenuItem(
-            child: Text("Vegetarian", style: TextStyle(color: Colors.white)),
-            value: "v"),
+            value: "v",
+            child: Text("Vegetarian", style: TextStyle(color: Colors.white))),
         DropdownMenuItem(
-            child: Text("Vegan", style: TextStyle(color: Colors.white)),
-            value: "V"),
+            value: "V",
+            child: Text("Vegan", style: TextStyle(color: Colors.white))),
       ];
 
       return Column(
@@ -459,6 +438,23 @@ class _RecipesPageState extends State<RecipesPage> {
           ),
         ],
       );
+    }
+  }
+
+  bool checkIngredints(List Ilist, MyAppState appState) {
+    int maxIndex = Ilist.length;
+    int matches = 0;
+    for (String recipeItem in Ilist) {
+      for (var kitchenItem in appState.inventoryList) {
+        if (recipeItem.contains(kitchenItem.name)) {
+          matches += 1;
+        }
+      }
+    }
+    if (matches >= maxIndex) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
