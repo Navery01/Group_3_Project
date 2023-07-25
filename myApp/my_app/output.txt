@@ -1,0 +1,106 @@
+@startuml
+set namespaceSeparator ::
+
+class "my_app::main.dart::MyApp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "my_app::main.dart::MyApp"
+
+class "my_app::main.dart::MyAppState" {
+  +WordPair current
+  +List<dynamic> inventoryList
+  +Map<String, dynamic> recipeLibrary
+  +dynamic writeToFile()
+  +void deleteFromFile()
+  +void readFile()
+  +void readRecipes()
+}
+
+"my_app::main.dart::MyAppState" o-- "english_words::src::word_pair.dart::WordPair"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "my_app::main.dart::MyAppState"
+
+class "my_app::main.dart::MyHomePage" {
+  +State<MyHomePage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "my_app::main.dart::MyHomePage"
+
+class "my_app::main.dart::_MyHomePageState" {
+  +int selectedIndex
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "my_app::main.dart::_MyHomePageState"
+
+class "my_app::main.dart::GeneratorPage" {
+  +State<GeneratorPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "my_app::main.dart::GeneratorPage"
+
+class "my_app::main.dart::_GeneratorPageState" {
+  +Widget build()
+  +Widget IngredientShowcase()
+  +Color getColor()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "my_app::main.dart::_GeneratorPageState"
+
+class "my_app::main.dart::IngredientInputBox" {
+  +State<IngredientInputBox> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "my_app::main.dart::IngredientInputBox"
+
+class "my_app::main.dart::_IngredientInputBoxState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "my_app::main.dart::_IngredientInputBoxState"
+
+class "my_app::main.dart::RecipesPage" {
+  +State<RecipesPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "my_app::main.dart::RecipesPage"
+
+class "my_app::main.dart::_RecipesPageState" {
+  +String? selectedOption
+  +Widget build()
+  +bool checkIngredints()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "my_app::main.dart::_RecipesPageState"
+
+class "my_app::main.dart::Ingredient" {
+  -String _name
+  -DateTime _date
+  -int _quantity
+  +String name
+  +DateTime date
+  +int quantity
+}
+
+class "my_app::recipes.dart::recipes" {
+  +String? name
+  +String? source
+  +int? preptime
+  +int? waittime
+  +int? cooktime
+  +int? servings
+  +String? comments
+  +int? calories
+  +int? fat
+  +int? satfat
+  +int? carbs
+  +int? fiber
+  +int? sugar
+  +int? protein
+  +String? instructions
+  +List<dynamic>? ingredients
+  +List<dynamic>? tags
+}
+
+
+@enduml
