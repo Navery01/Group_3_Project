@@ -12,7 +12,6 @@ void main() {
     ChangeNotifierProvider(
       create: (context) {
         var appState = MyAppState();
-        appState.readFile(); // Call readFile to populate Ilist
         return appState;
       },
       child: MyApp(),
@@ -45,6 +44,7 @@ class MyAppState extends ChangeNotifier {
   List inventoryList = <Ingredient>[];
   Map<String, dynamic> recipeLibrary =
       {}; //access with AppState.recipeLibrary["id"].attribute
+  List<String> filters = [];
 
   Future<void> writeToFile(String name, DateTime date) async {
     final file = File("lib/Ingredients.txt");
@@ -100,9 +100,21 @@ class MyAppState extends ChangeNotifier {
           recipeLibrary[key] = recipe;
         });
       }
+      recipeLibrary.forEach((key, value) {
+        for (String tag in value.tags) {
+          if (filters.contains(tag)) {
+            continue;
+          } else {
+            filters.add(tag);
+          }
+        }
+      });
     } catch (e) {
       print("error reading JSON file");
     }
+    filters.sort(
+      (a, b) => a.toString().compareTo(b.toString()),
+    );
   }
 }
 
@@ -186,7 +198,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
           SizedBox(height: 10),
           SizedBox(
             child: IngredientShowcase(appState),
-            height: 600,
+            height: MediaQuery.of(context).size.height - 66,
           ),
         ],
       ),
@@ -261,7 +273,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
       }
 
       return Container(
-        height: 600,
+        height: MediaQuery.of(context).size.height - 66,
         child: SingleChildScrollView(
           child: Column(
             children: ingredientListTiles,
@@ -392,28 +404,23 @@ class _RecipesPageState extends State<RecipesPage> {
             subtitle: Text(ing),
           ),
         );
-        if (checkIngredints(value.ingredients, appState)) {
+        if (checkIngredients(
+            value.ingredients, appState, selectedOption, value.tags)) {
           recipeListTiles.add(recipeTiles);
         }
       });
 
-      List<DropdownMenuItem<String>> dropdownItems = [
-        DropdownMenuItem(
-            value: "LI",
-            child: Text(
-              "Lactose Intolerant",
-              style: TextStyle(color: Colors.white),
-            )),
-        DropdownMenuItem(
-            value: "GF",
-            child: Text("Gluten Free", style: TextStyle(color: Colors.white))),
-        DropdownMenuItem(
-            value: "v",
-            child: Text("Vegetarian", style: TextStyle(color: Colors.white))),
-        DropdownMenuItem(
-            value: "V",
-            child: Text("Vegan", style: TextStyle(color: Colors.white))),
-      ];
+      List<DropdownMenuItem<String>> dropdownItems = [];
+      for (String tag in appState.filters) {
+        var newItem = DropdownMenuItem(
+          value: tag,
+          child: Text(
+            tag,
+            style: TextStyle(color: Colors.white),
+          ),
+        );
+        dropdownItems.add(newItem);
+      }
 
       return Column(
         children: [
@@ -441,21 +448,21 @@ class _RecipesPageState extends State<RecipesPage> {
     }
   }
 
-  bool checkIngredints(List Ilist, MyAppState appState) {
-    int maxIndex = Ilist.length;
+  bool checkIngredients(List<dynamic> Ilist, MyAppState appState,
+      String? currentTag, List<dynamic> tags) {
+    bool hasTag = currentTag != null && tags.contains(currentTag);
     int matches = 0;
+
     for (String recipeItem in Ilist) {
       for (var kitchenItem in appState.inventoryList) {
         if (recipeItem.contains(kitchenItem.name)) {
           matches += 1;
+          break;
         }
       }
     }
-    if (matches >= maxIndex) {
-      return true;
-    } else {
-      return false;
-    }
+
+    return matches == Ilist.length && hasTag;
   }
 }
 
