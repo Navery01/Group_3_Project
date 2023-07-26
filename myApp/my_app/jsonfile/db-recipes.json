@@ -18288,5 +18288,34 @@
             "untried",
             "test"
         ]
+    },
+    "id611": {
+        "id": "id611",
+        "name": "Test #0002",
+        "source": "N/A",
+        "preptime": 0,
+        "waittime": 0,
+        "cooktime": 0,
+        "servings": 1,
+        "comments": "the tofu probably needs more seasoning",
+        "calories": 430,
+        "fat": 14,
+        "satfat": 1,
+        "carbs": 53,
+        "fiber": 16,
+        "sugar": 4,
+        "protein": 31,
+        "instructions": "1. Cook noodles according to package directions. Drain, rinse with cold water, and drain again. Toss with 1 tsp soy sauce, sesame seeds, and sesame oil; season with white pepper to taste.\r\n\r\n2. Stir together flour and garlic powder in medium bowl; add tofu, and toss to coat. Season with black pepper to taste. \r\n\r\n3. Spray skillet with olive oil cooking spray; heat over medium-high heat, add tofu, and saut\u00e9 5 minutes, or until golden brown. Transfer to plate; sprinkle with soy sauce. \r\n\r\n4. Return skillet to heat. Add water and remaining soy sauce, then broccoli, carrots, and ginger. Cover, and simmer 3 minutes, or until broccoli is warmed through.\r\n\r\n5. To assemble: Pack soba noodles in 1 section of bento box or portable container. Pack tofu and broccoli mixture in other sections. Fill in last section with edamame. Refrigerate, uncovered, until all ingredients are chilled thoroughly. Cover box, and refrigerate until ready to serve.",
+        "ingredients": [
+            "lime\r",
+            "Eggs\r",
+            "Milk\r",
+            "Bread"
+        ],
+        "tags": [
+            "bento",
+            "gluten",
+            "test"
+        ]
     }
 }
