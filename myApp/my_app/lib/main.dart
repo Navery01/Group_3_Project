@@ -450,7 +450,7 @@ class _RecipesPageState extends State<RecipesPage> {
 
   bool checkIngredients(List<dynamic> Ilist, MyAppState appState,
       String? currentTag, List<dynamic> tags) {
-    bool hasTag = currentTag != null && tags.contains(currentTag);
+    bool hasTag = currentTag == null || tags.contains(currentTag);
     int matches = 0;
 
     for (String recipeItem in Ilist) {
@@ -462,7 +462,7 @@ class _RecipesPageState extends State<RecipesPage> {
       }
     }
 
-    return matches == Ilist.length && hasTag;
+    return matches >= Ilist.length && hasTag;
   }
 }
 
