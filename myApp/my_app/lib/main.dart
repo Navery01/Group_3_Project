@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
-        title: 'Namer App',
+        title: 'Recipe Recommender',
         theme: ThemeData(
             useMaterial3: true,
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
@@ -220,6 +220,8 @@ class _GeneratorPageState extends State<GeneratorPage> {
       List<Widget> ingredientListTiles = [];
 
       for (var ingredient in appState.inventoryList) {
+        var formattedName = ingredient.name[0].toString().toUpperCase() +
+            ingredient.name.toString().substring(1).toLowerCase();
         DateTime expirationDate = ingredient.date;
         Duration difference = expirationDate.difference(today);
         int expireDays = difference.inDays;
@@ -263,8 +265,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
                 borderRadius: BorderRadius.circular(10),
               ),
               textColor: Color.fromRGBO(255, 255, 255, 1),
-              leading: Icon(Icons.favorite),
-              title: Text(ingredient.name),
+              title: Text(formattedName),
               subtitle: Text(expirationText),
             ),
           ),
@@ -284,7 +285,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
   }
 
   Color getColor(int number) {
-    if (number < 2) {
+    if (number <= 0) {
       return Colors.red;
     } else if (number < 7) {
       return Colors.yellow;
@@ -455,7 +456,9 @@ class _RecipesPageState extends State<RecipesPage> {
 
     for (String recipeItem in Ilist) {
       for (var kitchenItem in appState.inventoryList) {
-        if (recipeItem.contains(kitchenItem.name)) {
+        if (recipeItem
+            .toUpperCase()
+            .contains(kitchenItem.name.toString().toUpperCase())) {
           matches += 1;
           break;
         }
