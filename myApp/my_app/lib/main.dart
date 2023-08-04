@@ -48,6 +48,13 @@ class MyAppState extends ChangeNotifier {
 
   Future<void> writeToFile(String name, DateTime date) async {
     final file = File("lib/Ingredients.txt");
+    if (await file.exists()) {
+      var contents = await file.readAsLines();
+
+      if (contents.last != "") {
+        await file.writeAsString('\n', mode: FileMode.append);
+      }
+    }
     await file.writeAsString('$name,${date.toString()}\n',
         mode: FileMode.append);
     notifyListeners();
