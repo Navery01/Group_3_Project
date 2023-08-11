@@ -11,22 +11,36 @@ A click is all that is needed to generate hundreds of recipes tailored for the u
 Further customization filters can be applied to find the perfect recipe. 
 
 # **Milestone Code 1** <br>
-At this stage, We have setup a webpage for the the App with general funtionalities such Admin login and update.<br>
+At this stage, we have setup a webpage for the the App with general funtionalities such Admin login and update.<br>
 We have also included Add recipes function, which will allow the application to store available recipes for processing.<br> 
 
-# **RELEASE NOTE** <br>
 # **Milestone Code 2** <br>
 After runing the unit and system test for the intial stage,<br>
-We have added ingredient database and recipe database
+We have added an ingredient database and a recipe database.
 We have added two pages to the website. We have the home page where there is a list of ingredients and their expiring dates.<br> 
-You can add ingredient and also delete any ingredient that you don't want in your final list.<br>
-We have the recipe list in the second page. This page will enable filter the ingredients by category with a dropdown menu list<br> 
+You can add ingredients and also delete any ingredient that you don't want in your final list.<br>
+We have the recipe list in the second page. 
 
+# **Milestone Code 3** <br>
+We have added further improvements to the ingredients list and integrated functionality to the recipes list.
+The app discretely reads the local recipe json file. When you move to the recipes list, the recipe database will be read automatically.
+Based on the currently available ingredients, appropriate recipes will be generated in list form. 
+Filters have been integrated so further specify the type of recipes desired, based on cuisine type or ingredients.
+Real-world testing is in progress. Correction of bugs and UX improvements are ongoing.
+
+# **RELEASE NOTES (August 08, 2023)** <br>
+
+# **Milestone Code 4** <br>
+We hve further improved on our app performance to be more user friendly and fit in any platform and various devices.
+We have added color to indicate the status of each ingredient. Apart from expiring date under each ingredient, green, yellow and red color have been added to show the status. Green means the good, yellow means about to expire while red means expired.
+Both automated and manual testing had been carried out to find and fix all the discovered bugs Real-world testing is in progress. Correction of bugs and UX improvements are ongoing.
+
+***************
 We use the following websites to gather information:<br>
  [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)<br>
  [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)<br>
 [Git Tutorial](https://www.githubtutorial.com)<br>
-[Python Tutorial](https://www.pythontutorial.com)<br>
+[Python Tutorial](https://www.pythontutorial.com)<br> (not applicable)
 
 
 For help getting started with Flutter development, view the
