@@ -98,6 +98,7 @@ class MyAppState extends ChangeNotifier {
     //fills a map (recipeLibrary) with recipes from the JSON database
     try {
       var file = File("jsonfile/db-recipes.json");
+
       if (await file.exists()) {
         String parseJSON = await file.readAsString();
         Map<String, dynamic> jsonMap = jsonDecode(parseJSON);
@@ -107,7 +108,8 @@ class MyAppState extends ChangeNotifier {
           recipeLibrary[key] = recipe;
         });
       }
-      recipeLibrary.forEach((key, value) {
+      final file2 = File("lib/filters.txt");
+      recipeLibrary.forEach((key, value) async {
         for (String tag in value.tags) {
           if (filters.contains(tag)) {
             continue;
