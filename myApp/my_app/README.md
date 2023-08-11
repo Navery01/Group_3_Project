@@ -21,8 +21,6 @@ We have added two pages to the website. We have the home page where there is a l
 You can add ingredients and also delete any ingredient that you don't want in your final list.<br>
 We have the recipe list in the second page. 
 
-
-# **RELEASE NOTES (July 07, 2023)** <br>
 # **Milestone Code 3** <br>
 We have added further improvements to the ingredients list and integrated functionality to the recipes list.
 The app discretely reads the local recipe json file. When you move to the recipes list, the recipe database will be read automatically.
@@ -30,22 +28,19 @@ Based on the currently available ingredients, appropriate recipes will be genera
 Filters have been integrated so further specify the type of recipes desired, based on cuisine type or ingredients.
 Real-world testing is in progress. Correction of bugs and UX improvements are ongoing.
 
+# **RELEASE NOTES (August 08, 2023)** <br>
 
 # **Milestone Code 4** <br>
-We hve further improved on our app performance to be more user friendly and fit in any platform and variuos devices.
+We hve further improved on our app performance to be more user friendly and fit in any platform and various devices.
 We have added color to indicate the status of each ingredient. Apart from expiring date under each ingredient, green, yellow and red color have been added to show the status. Green means the good, yellow means about to expire while red means expired.
-Both automated and manual testing had been carried out to find and fix all the discovered bugs
+Both automated and manual testing had been carried out to find and fix all the discovered bugs Real-world testing is in progress. Correction of bugs and UX improvements are ongoing.
 
-Real-world testing is in progress. Correction of bugs and UX improvements are ongoing.
-
-
-
-
+***************
 We use the following websites to gather information:<br>
  [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)<br>
  [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)<br>
 [Git Tutorial](https://www.githubtutorial.com)<br>
-[Python Tutorial](https://www.pythontutorial.com)<br>
+[Python Tutorial](https://www.pythontutorial.com)<br> (not applicable)
 
 
 For help getting started with Flutter development, view the
