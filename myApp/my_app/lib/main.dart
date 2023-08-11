@@ -39,8 +39,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
-
   List inventoryList = <Ingredient>[];
   Map<String, dynamic> recipeLibrary =
       {}; //access with AppState.recipeLibrary["id"].attribute
@@ -108,7 +106,6 @@ class MyAppState extends ChangeNotifier {
           recipeLibrary[key] = recipe;
         });
       }
-      final file2 = File("lib/filters.txt");
       recipeLibrary.forEach((key, value) async {
         for (String tag in value.tags) {
           if (filters.contains(tag)) {
@@ -260,7 +257,6 @@ class _GeneratorPageState extends State<GeneratorPage> {
                     ),
                   );
                 });
-            print("tap");
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -398,20 +394,67 @@ class _RecipesPageState extends State<RecipesPage> {
 
       appState.recipeLibrary.forEach((key, value) {
         String ing = value.ingredients.join(", ");
-        var recipeTiles = Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListTile(
-            visualDensity: VisualDensity(horizontal: .5),
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                width: 2,
+
+        Widget recipeTiles = GestureDetector(
+          onTap: () async {
+            await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                      title: Text(value.name),
+                      content: SingleChildScrollView(
+                        child: ListBody(children: [
+                          RichText(
+                            text: TextSpan(
+                                style: DefaultTextStyle.of(context).style,
+                                children: [
+                                  TextSpan(
+                                    text: "Ingredients\n",
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        "${value.ingredients.toString().substring(1, value.ingredients.toString().length - 1).replaceAll(",", "\n")} \n",
+                                  ),
+                                  TextSpan(
+                                      text: "Instructions\n",
+                                      style: TextStyle(fontSize: 20)),
+                                  TextSpan(
+                                      text:
+                                          "${value.instructions.toString().replaceAll(",", "\n")} \n"),
+                                  TextSpan(
+                                      text: "Nutrition Facts\n",
+                                      style: TextStyle(fontSize: 20)),
+                                  TextSpan(
+                                      text:
+                                          "Servings: ${value.servings.toString()} \n"
+                                          "Calories: ${value.calories.toString()} \n"
+                                          "Fat: ${value.fat.toString()}g \n"
+                                          "Saturated Fat: ${value.satfat.toString()}g \n"
+                                          "Carbohydrates: ${value.carbs.toString()}g \n"
+                                          "Fiber: ${value.fiber.toString()}g \n"
+                                          "Sugar: ${value.sugar.toString()}g \n"
+                                          "Protein: ${value.protein.toString()}g \n"),
+                                ]),
+                          )
+                        ]),
+                      ));
+                });
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              visualDensity: VisualDensity(horizontal: .5),
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(10),
               ),
-              borderRadius: BorderRadius.circular(10),
+              textColor: Color.fromRGBO(255, 255, 255, 1),
+              title: Text(value.name),
+              subtitle: Text(ing),
             ),
-            textColor: Color.fromRGBO(255, 255, 255, 1),
-            leading: Icon(Icons.favorite),
-            title: Text(value.name),
-            subtitle: Text(ing),
           ),
         );
         if (checkIngredients(
