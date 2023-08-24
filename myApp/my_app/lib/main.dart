@@ -340,13 +340,11 @@ class _IngredientInputBoxState extends State<IngredientInputBox> {
                         lastDate: DateTime(2100),
                       );
 
-                      if (pickedDate != null) {
-                        setState(() {
-                          selectedDate = pickedDate;
-                        });
-                        DateTime expirationDate = pickedDate;
-                        appState.writeToFile(ingredientName, expirationDate);
-                      }
+                      setState(() {
+                        selectedDate = pickedDate;
+                      });
+                      DateTime? expirationDate = pickedDate;
+                      appState.writeToFile(ingredientName, expirationDate!);
 
                       Navigator.of(context).pop();
                     },
