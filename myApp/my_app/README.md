@@ -33,7 +33,7 @@ Real-world testing is in progress. Correction of bugs and UX improvements are on
 # **Milestone Code 4** <br>
 We hve further improved on our app performance to be more user friendly and fit in any platform and various devices.
 We have added color to indicate the status of each ingredient. Apart from expiring date under each ingredient, green, yellow and red color have been added to show the status. Green means the good, yellow means about to expire while red means expired.
-Both automated and manual testing had been carried out to find and fix all the discovered bugs Real-world testing is in progress. Correction of bugs and UX improvements are ongoing.
+Both automated and manual testing had been carried out to find and fix all the discovered bugs.
 
 ***************
 We use the following websites to gather information:<br>
