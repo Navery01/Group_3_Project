@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -68,8 +67,9 @@ class recipes {
   }
 
   pullFromDB() async {
-    final response = await http.get(Uri.parse('http://3.145.164.187/items'));
-
+    final response = await http.get(Uri.parse(
+        'http://3.145.164.187/RecipeRecommender/RecipeRecommender-Backend.py/items'));
+    print(response);
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {

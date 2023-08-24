@@ -34,62 +34,43 @@ def pullFromDB():
     )
 
     cursor = conn.cursor()
-    query = 'SELECT * FROM Recipes'
+    query = '''
+    SELECT 
+        r.*,
+        GROUP_CONCAT(DISTINCT i.ingredient) AS ingredients,
+        GROUP_CONCAT(DISTINCT t.tag) AS tags
+    FROM Recipes r
+    LEFT JOIN ingredients i ON r.id = i.recipeId
+    LEFT JOIN tags t ON r.id = t.recipeId
+    GROUP BY r.id;
+    '''
     cursor.execute(query)
     result = cursor.fetchall()
 
-    query = 'SELECT * FROM ingredients'
+    List_of_recipes = [
+        {'id': row[0],
+         'name': row[1],
+         'source': row[2],
+         'preptime': row[3],
+         'waittime': row[4],
+         'cooktime': row[5],
+         'servings': row[6],
+         'comments': row[7],
+         'calories': row[8],
+         'fat': row[9],
+         'satfat': row[10],
+         'carbs': row[11],
+         'fiber': row[12],
+         'sugar': row[13],
+         'protein': row[14],
+         'instructions': row[15],
+         'ingredients': row[16].split(","),
+         'tags': row[17] if row[16] else []} for row in result]
 
-    cursor.execute(query)
-    result2 = cursor.fetchall()
-    ingredientDict = {}
-    for i in range(len(result2) - 1):
-        group_id = result2[i][0]
-        ingredient = result2[i][1]
-
-        if group_id not in ingredientDict:
-            ingredientDict[group_id] = []
-
-        ingredientDict[group_id].append(ingredient)
-
-    for i in range(1, len(result)):
-        ingTuple = (ingredientDict[i],)
-        temp = result[i] + ingTuple
-
-        result[i] = temp
-        print(len(result[i]))
-
-
-
-    List_of_recipes = []
-    for i in result:
-        recipe = Recipe(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[9], i[10], i[11], i[12], i[13], i[14], i[15])
-        recipe_dict = {'id': recipe.id,
-                       'name': recipe.name,
-                       'source': recipe.source,
-                       'preptime': recipe.preptime,
-                       'waittime': recipe.waittime,
-                       'cooktime': recipe.cooktime,
-                       'servings': recipe.servings,
-                       'comments': recipe.comments,
-                       'calories': recipe.calories,
-                       'fat': recipe.fat,
-                       'satfat': recipe.satfat,
-                       'carbs': recipe.carbs,
-                       'fiber': recipe. fiber,
-                       'sugar': recipe.sugar,
-                       'protein': recipe.protein,
-                       'instructions': recipe.instructions,
-                       'ingredients': recipe.ingredients,
-                       'tags': recipe.tags
-                       }
-        List_of_recipes.append(recipe_dict)
     cursor.close()
     conn.close()
 
-    # return jsonify(List_of_recipes)
+    return jsonify(List_of_recipes)
 
-pullFromDB()
-# if __name__ == '__main__':
-#     app.run(debug=True)
-#     pullFromDB()
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -98,24 +98,24 @@ class MyAppState extends ChangeNotifier {
       var file = File("jsonfile/db-recipes.json");
       var data = recipes().pullFromDB();
 
-      if (await file.exists()) {
-        String parseJSON = await data.readAsString();
-        Map<String, dynamic> jsonMap = jsonDecode(parseJSON);
+      // if (await file.exists()) {
+      //   String parseJSON = await data.readAsString();
+      //   Map<String, dynamic> jsonMap = jsonDecode(parseJSON);
 
-        jsonMap.keys.forEach((key) {
-          recipes recipe = recipes.fromJSON(jsonMap[key]);
-          recipeLibrary[key] = recipe;
-        });
-      }
-      recipeLibrary.forEach((key, value) async {
-        for (String tag in value.tags) {
-          if (filters.contains(tag)) {
-            continue;
-          } else {
-            filters.add(tag);
-          }
-        }
-      });
+      //   jsonMap.keys.forEach((key) {
+      //     recipes recipe = recipes.fromJSON(jsonMap[key]);
+      //     recipeLibrary[key] = recipe;
+      //   });
+      // }
+      // recipeLibrary.forEach((key, value) async {
+      //   for (String tag in value.tags) {
+      //     if (filters.contains(tag)) {
+      //       continue;
+      //     } else {
+      //       filters.add(tag);
+      //     }
+      //   }
+      // });
     } catch (e) {
       print("error reading JSON file");
     }
