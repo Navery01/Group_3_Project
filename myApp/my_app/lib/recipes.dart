@@ -1,5 +1,13 @@
+import 'package:flutter/widgets.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import 'dart:async';
+
 class recipes {
-  // int? id;
+  int? id;
   String? name;
   String? source;
   int? preptime;
@@ -19,8 +27,7 @@ class recipes {
   List<dynamic>? tags;
 
   recipes(
-      {
-      // this.id,
+      {this.id,
       this.name,
       this.source,
       this.preptime,
@@ -40,7 +47,7 @@ class recipes {
       this.tags});
 
   recipes.fromJSON(Map<String, dynamic> json) {
-    // id = json['id'];
+    id = json['id'];
     name = json["name"];
     source = json['source'];
     preptime = json['preptime'];
@@ -58,5 +65,15 @@ class recipes {
     instructions = json['instructions'];
     ingredients = json['ingredients'];
     tags = json['tags'];
+  }
+
+  pullFromDB() async {
+    final response = await http.get(Uri.parse('http://3.145.164.187/items'));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load items');
+    }
   }
 }
