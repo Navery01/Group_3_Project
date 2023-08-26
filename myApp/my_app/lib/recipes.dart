@@ -68,7 +68,7 @@ class recipes {
 
   pullFromDB() async {
     final response = await http.get(Uri.parse(
-        'http://3.145.164.187/RecipeRecommender/RecipeRecommender-Backend.py/items'));
+        'http://ec2-3-145-164-187.us-east-2.compute.amazonaws.com:8080/items'));
     print(response);
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
