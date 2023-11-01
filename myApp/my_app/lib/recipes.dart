@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -68,11 +67,14 @@ class recipes {
   }
 
   pullFromDB() async {
-    final response = await http.get(Uri.parse('http://3.145.164.187/items'));
-
+    final response = await http.get(Uri.parse(
+        'http://ec2-3-145-164-187.us-east-2.compute.amazonaws.com:8080/items'));
+    // print(jsonDecode(response.body));
     if (response.statusCode == 200) {
+      print("sucessful connection");
       return jsonDecode(response.body);
     } else {
+      print("failed to load json file");
       throw Exception('Failed to load items');
     }
   }
