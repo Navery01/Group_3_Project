@@ -1,12 +1,5 @@
-import 'package:flutter/widgets.dart';
-import 'package:path/path.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
-import 'dart:async';
-
 class recipes {
-  int? id;
+  // int? id;
   String? name;
   String? source;
   int? preptime;
@@ -26,7 +19,8 @@ class recipes {
   List<dynamic>? tags;
 
   recipes(
-      {this.id,
+      {
+      // this.id,
       this.name,
       this.source,
       this.preptime,
@@ -46,7 +40,7 @@ class recipes {
       this.tags});
 
   recipes.fromJSON(Map<String, dynamic> json) {
-    id = json['id'];
+    // id = json['id'];
     name = json["name"];
     source = json['source'];
     preptime = json['preptime'];
@@ -64,18 +58,5 @@ class recipes {
     instructions = json['instructions'];
     ingredients = json['ingredients'];
     tags = json['tags'];
-  }
-
-  pullFromDB() async {
-    final response = await http.get(Uri.parse(
-        'http://ec2-3-145-164-187.us-east-2.compute.amazonaws.com:8080/items'));
-    // print(jsonDecode(response.body));
-    if (response.statusCode == 200) {
-      print("sucessful connection");
-      return jsonDecode(response.body);
-    } else {
-      print("failed to load json file");
-      throw Exception('Failed to load items');
-    }
   }
 }

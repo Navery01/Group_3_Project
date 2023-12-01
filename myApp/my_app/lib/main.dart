@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'recipes.dart';
@@ -47,7 +47,8 @@ class MyAppState extends ChangeNotifier {
   Future<void> writeToFile(String name, DateTime date) async {
     final file = File("lib/Ingredients.txt");
     if (await file.exists()) {
-      var contents = await file.readAsLines();
+      var fileData = await rootBundle.loadString("lib/ingredients.txt");
+      List<String> contents = fileData.split("\n");
 
       if (contents.last != "") {
         await file.writeAsString('\n', mode: FileMode.append);
@@ -59,32 +60,29 @@ class MyAppState extends ChangeNotifier {
   }
 
   void deleteFromFile(int index) async {
-    final file = File("lib/Ingredients.txt");
-    List<String> lines = await file.readAsLines();
+    var fileData = await rootBundle.loadString("lib/ingredients.txt");
+    List<String> lines = fileData.split("\n");
 
     if (index >= 0 && index < lines.length) {
       lines.removeAt(index);
-      await file.writeAsString(lines.join('\n'));
       print('Line deleted successfully.');
     } else {
       print('Invalid line index.');
     }
   }
 
-  void readFile() async {
+  Future<void> readFile() async {
     try {
-      final file = File("lib/ingredients.txt");
-      if (await file.exists()) {
-        var contents = await file.readAsLines();
-        if (contents.isNotEmpty) {
-          inventoryList = contents.map((ingredientName) {
-            var ingredient = Ingredient();
-            var ingredientData = ingredientName.split(",");
-            ingredient.name = ingredientData[0];
-            ingredient.date = DateTime.parse(ingredientData[1]);
-            return ingredient;
-          }).toList();
-        }
+      var fileData = await rootBundle.loadString("lib/ingredients.txt");
+      List<String> contents = fileData.split("\n");
+      if (contents.isNotEmpty) {
+        inventoryList = contents.map((ingredientName) {
+          var ingredient = Ingredient();
+          var ingredientData = ingredientName.split(",");
+          ingredient.name = ingredientData[0];
+          ingredient.date = DateTime.parse(ingredientData[1]);
+          return ingredient;
+        }).toList();
       }
     } catch (e) {
       print("Error reading file: $e");
@@ -92,28 +90,33 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void readRecipes() async {
+  Future<void> readRecipes() async {
+    //fills a map (recipeLibrary) with recipes from the JSON database
     try {
-      var data = await recipes().pullFromDB(); // Added 'await' here
-      Map<String, dynamic> jsonMap = data;
+      final String parseJSON =
+          await rootBundle.loadString("jsonfile/db-recipes.json");
+      Map<String, dynamic> jsonMap = jsonDecode(parseJSON);
 
-      jsonMap.keys.forEach((key) {
+      for (var key in jsonMap.keys) {
         recipes recipe = recipes.fromJSON(jsonMap[key]);
         recipeLibrary[key] = recipe;
-      });
+      }
 
-      recipeLibrary.forEach((key, value) {
+      recipeLibrary.forEach((key, value) async {
         for (String tag in value.tags) {
-          if (!filters.contains(tag)) {
+          if (filters.contains(tag)) {
+            continue;
+          } else {
             filters.add(tag);
           }
         }
       });
     } catch (e) {
-      print("error reading JSON data");
+      print("error reading JSON file");
     }
-
-    filters.sort((a, b) => a.toString().compareTo(b.toString()));
+    filters.sort(
+      (a, b) => a.toString().compareTo(b.toString()),
+    );
   }
 }
 
@@ -196,8 +199,8 @@ class _GeneratorPageState extends State<GeneratorPage> {
           ),
           SizedBox(height: 10),
           SizedBox(
-            child: IngredientShowcase(appState),
             height: MediaQuery.of(context).size.height - 66,
+            child: IngredientShowcase(appState),
           ),
         ],
       ),
@@ -271,7 +274,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
         ingredientListTiles.add(ingredientTile);
       }
 
-      return Container(
+      return SizedBox(
         height: MediaQuery.of(context).size.height - 66,
         child: SingleChildScrollView(
           child: Column(
@@ -322,7 +325,7 @@ class _IngredientInputBoxState extends State<IngredientInputBox> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('When does the ${ingredientName} expire?'),
+                  title: Text('When does the $ingredientName expire?'),
                   content: ElevatedButton(
                     child: Text('Select expiration date'),
                     onPressed: () async {
@@ -333,11 +336,13 @@ class _IngredientInputBoxState extends State<IngredientInputBox> {
                         lastDate: DateTime(2100),
                       );
 
-                      setState(() {
-                        selectedDate = pickedDate;
-                      });
-                      DateTime? expirationDate = pickedDate;
-                      appState.writeToFile(ingredientName, expirationDate!);
+                      if (pickedDate != null) {
+                        setState(() {
+                          selectedDate = pickedDate;
+                        });
+                        DateTime expirationDate = pickedDate;
+                        appState.writeToFile(ingredientName, expirationDate);
+                      }
 
                       Navigator.of(context).pop();
                     },
