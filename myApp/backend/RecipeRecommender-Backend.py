@@ -29,7 +29,7 @@ def pullFromDB():
     conn = mysql.connector.connect(
     host = 'rds-mysql-reciperecommender.cgbtkemymwhi.us-east-2.rds.amazonaws.com',
     user='admin',
-    password='Dallas2011',
+    password='xxxxxxxx',
     database='Recipes'
     )
 
